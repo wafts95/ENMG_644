@@ -48,7 +48,7 @@ class Iteration:
         print('\n')
         print('Iteration:\t'+self.name)
         print('Duration:\t'+str(self.duration) +' days')
-        print('Start Date:\t'+self.start.strftime('%m/%d/%Y'))
+        print('Start Date:\t'+self.start.strftime('%d/%m/%Y'))
         print('Velocity:\t'+str(velocity))
         print('\n')
         print('User Story Backlog:')

@@ -17,16 +17,16 @@ curr_opp=''
 
 while not role:
   print('\nPlease Select a Role:\n1- Scrum Master\n2- Developer\n')
-  role_key = int(input('Selection: '))
-  if role_key in [1,2]:
-    if role_key == 1:
+  role_key = input('Selection: ')
+  if role_key in ['1','2']:
+    if role_key == '1':
       role = 'Scrum Master'
       session_user = 'Scrum Master'
     else:
       role = 'Developer'
   else:
     print('Error: Invalid Selection...')
-    role_key = int(input('Selection: '))
+    #role_key = input('Selection: ')
 
 
 if role == 'Developer':
@@ -52,9 +52,12 @@ while 1:
   print('\n')
   curr_opp=input("Enter option: ")
 
+  if(not (curr_opp in ['0','7'] or (role == 'Scrum Master' and curr_opp in ['1', '2','3','4', '5']) or (role == 'Developer' and curr_opp in ['6']))):
+    print("\nError: Invalid Operation, Please Try Again!\n")
+    
   # Exit handling
-  if(curr_opp not in ['0','1', '2','3','4', '5', '6', '7', '8', '9', '10']):
-    print("\nError: Invalid Opperation, Please Try Again!\n")
+  #if(curr_opp not in ['0','1', '2','3','4', '5', '6', '7', '8', '9', '10']):
+   # print("\nError: Invalid Operation, Please Try Again!\n")
 
   elif(curr_opp == '0'):
     print('\nData has been written to database...\n')
@@ -63,8 +66,18 @@ while 1:
   elif(curr_opp == '1' and role == 'Scrum Master'):
     # Create a new Iteration
     name=input("Enter Iteration Name: ")
-    duration=int(input("Enter Iteration Duration (in days): "))
-    start=input("Enter instructor Start (DD/MM/YYYY): ")
+    while True:
+      try:
+        duration=int(input("Enter Iteration Duration (in days): "))
+        break
+      except:
+        print("Invalid Duration")
+    while True:
+      try:
+        start= datetime.datetime.strptime(input("Enter iteration Start (DD/MM/YYYY): "), "%d/%m/%Y").date()
+        break
+      except:
+        print("Invalid Date")
     developers = []
     while(developers == []):
       temp_developers = (input("Enter Developer Names ( - seperated): ")).split('-')
@@ -77,7 +90,7 @@ while 1:
         else:
           temp_list.append(get_obj_by_name(developer, users))
       developers = temp_list
-    iterations.append(Iteration(name, duration, datetime.datetime.strptime(start, "%d/%m/%Y").date(), developers))
+    iterations.append(Iteration(name, duration, start, developers))
     print("\nIteration Created Successfully\n")
 
     # create a new user story and assign it to Iteration
@@ -85,11 +98,27 @@ while 1:
     if(iterations == []):
       print('\nAn Iteration needs to be created before creating additional user stories\n')
     else:
-      print('\nPlease selectan iteration to add the story to:\n')
+      print('\nPlease select an iteration to add the story to or "Back" to go to main menu:\n')
+      i=1
       for itr in iterations:
-        print(itr.name)
+        print(str(i)+": "+itr.name)
+        i+=1
       print('\n')
+      
       selected_itr = input("Selection: ")
+      while True:
+        try:
+          if int(selected_itr)>0:
+            selected_itr = iterations[int(selected_itr)-1].name
+            break
+          else:
+            selected_itr = input("Invalid Selection.. Try again: ")
+        except:
+          selected_itr = input("Invalid Selection.. Try again: ")
+      print('\nYou selected:', selected_itr,'\n')
+#add back option
+      if selected_itr.lower() == "back":
+        continue
       while selected_itr not in [itr.name for itr in iterations]:
         print('\nError: Invalid Selection...\n')
         selected_itr = input("Selection: ")
@@ -147,8 +176,13 @@ while 1:
         while selected_dev not in [item.name for item in selected_itr.developers]:
           print('\nError: Invalid Developer Name...\n')
           selected_dev = input('Selection: ')
-        start = input('Start Date (DD/MM/YYYY): ')
-        selected_story.add_task(Task(name, effort, get_obj_by_name(selected_dev, users), datetime.datetime.strptime(start, "%d/%m/%Y").date(), 'Open', None))
+        while True:
+          try:
+            start= datetime.datetime.strptime(input('Start Date (DD/MM/YYYY): '), "%d/%m/%Y").date()
+            break
+          except:
+            print("Invalid Date")
+        selected_story.add_task(Task(name, effort, get_obj_by_name(selected_dev, users), start, 'Open', None))
         print('\nTask has been created successfully!\n')
 
   elif(curr_opp == '4' and role == 'Scrum Master'):
@@ -178,7 +212,7 @@ while 1:
 
       selected_iteration.delete_userStory(selected_story)
       selected_story = get_obj_by_name(selected_story, selected_iteration.userStories)
-      print('\nUser Story Has Been Delete Successfully!\n')
+      print('\nUser Story Has Been Deleted Successfully!\n')
 
   elif(curr_opp == '5' and role == 'Scrum Master'):
     print('\nPlease Select An Iteration\n')
@@ -288,8 +322,8 @@ while 1:
   elif(curr_opp == '7'):
     print('\nPlease Select an Iteration:\n')
     for itr in iterations:
-      if itr.userStories != [] and all(elem.tasks != [] for elem in itr.userStories):
-          print(itr.name)
+      #if itr.userStories != [] and all(elem.tasks != [] for elem in itr.userStories):
+        print(itr.name)
     print('\n')
     selected_iteration = input('Selection: ')
     while selected_iteration not in [item.name for item in iterations]:
