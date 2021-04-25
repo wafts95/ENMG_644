@@ -48,7 +48,7 @@ class Iteration:
         print('\n')
         print('Iteration:\t'+self.name)
         print('Duration:\t'+str(self.duration) +' days')
-        print('Start Date:\t'+self.start.strftime('%m/%d/%Y'))
+        print('Start Date:\t'+self.start.strftime('%d/%m/%Y'))
         print('Velocity:\t'+str(velocity))
         print('\n')
         print('User Story Backlog:')
@@ -74,13 +74,13 @@ class Iteration:
             # Print Tasks
             print('\n\tTasks Open')
             for task in openTask:
-                print('\t'+task.name+'\t\t-\t'+task.developer.name)
+                print('\t'+task.name+'\t-\t'+task.developer.name)
             print('\n\tTasks in progress')
             for task in progressTask:
-                print('\t'+task.name+'\t\t-\t'+task.developer.name)
+                print('\t'+task.name+'\t-\t'+task.developer.name)
             print('\n\tTasks completed')
             for task in completedTask:
-                print('\t'+task.name+'\t\t-\t'+task.developer.name)
+                print('\t'+task.name+'\t-\t'+task.developer.name)
         print('\n')
         print('User Story Completed:')
         for item in completed:
