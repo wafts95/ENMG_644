@@ -20,6 +20,10 @@ while not role:
   role_key = input('Selection: ')
   if role_key in ['1','2']:
     if role_key == '1':
+      passcode_trial = input('Please enter the Scrum Master password: \n')
+      if passcode_trial != "enmg644":
+        print("Invalid Passcode, try again...")   
+        continue
       role = 'Scrum Master'
       session_user = 'Scrum Master'
     else:

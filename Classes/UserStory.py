@@ -17,12 +17,13 @@ class UserStory:
 
     def update_status(self):
         task_status = [task.status for task in self.tasks]
-        if('In Progress' in task_status):
+        if('In Progress' in task_status or 'Completed' in task_status):
             self.status = 'In Progress'
-        elif(all(elem == 'Completed' for elem in task_status)):
-            self.status = 'Completed'
         else:
             self.status = 'Open'
+
+        if(all(elem == 'Completed' for elem in task_status)):
+            self.status = 'Completed'
 
     def add_task(self, task):
         self.tasks.append(task)
