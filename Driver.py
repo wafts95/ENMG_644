@@ -22,27 +22,28 @@ while not role:
     if role_key == '1':
       passcode_trial = input('Please enter the Scrum Master password: \n')
       if passcode_trial != "enmg644":
-        print("Invalid Passcode, try again...")   
+        print("Invalid Password. Try again...")   
         continue
       role = 'Scrum Master'
       session_user = 'Scrum Master'
     else:
       role = 'Developer'
   else:
-    print('Error: Invalid Selection...')
-    #role_key = input('Selection: ')
+    print('\nError: Invalid Selection...')
 
+  if role =='Developer':
+    name = input('Please enter your name: ')
+    if name in [user.name for user in users]:
+      session_user = get_obj_by_name(name, users)
+      continue
+    else:
+      print('\nError: User is not in database!\n')
+      role=None    
 
-if role == 'Developer':
-    while not session_user:
-      name = input('Please enter your name: ')
-      if name in [user.name for user in users]:
-        session_user = get_obj_by_name(name, users)
-      else:
-        print('\nError: User is not in database!\n')
-print('\nUser Sign In Successfull!\n')
+          
+print('\nUser Sign In Successfull!')
 while 1:
-  print('Available Options:\n')
+  print('\nAvailable Options:\n')
   print('0- Save & Exit')
   if(role == 'Scrum Master'):
     print('1- Create Iteration')
@@ -60,26 +61,26 @@ while 1:
   if(not (curr_opp in ['0','8'] or (role == 'Scrum Master' and curr_opp in ['1', '2','3','4', '5', '6']) or (role == 'Developer' and curr_opp in ['7']))):
     print("\nError: Invalid Operation, Please Try Again!\n")
     
-  # Exit handling
-  #if(curr_opp not in ['0','1', '2','3','4', '5', '6', '7', '8', '9', '10']):
-   # print("\nError: Invalid Operation, Please Try Again!\n")
 
   elif(curr_opp == '0'):
     print('\nData has been written to database...\n')
     break
 
+  # Create a new Iteration
   elif(curr_opp == '1'):
-    # Create a new Iteration
     name=input("Enter Iteration Name: ")
     while True:
       try:
         duration=int(input("Enter Iteration Duration (in days): "))
+        if duration<0:
+          print("Sorry, input must be a positive integer. Try again.")
+          continue
         break
       except:
         print("Invalid Duration")
     while True:
       try:
-        start= datetime.datetime.strptime(input("Enter iteration Start (DD/MM/YYYY): "), "%d/%m/%Y").date()
+        start= datetime.datetime.strptime(input("Enter Iteration Start (DD/MM/YYYY): "), "%d/%m/%Y").date()
         break
       except:
         print("Invalid Date")
@@ -98,12 +99,12 @@ while 1:
     iterations.append(Iteration(name, duration, start, developers))
     print("\nIteration Created Successfully\n")
       
-    # create a new user story and assign it to Iteration
+  # create a new user story and assign it to Iteration
   elif(curr_opp == "2"):
     if(iterations == []):
       print('\nAn Iteration needs to be created before creating additional user stories\n')
     else:
-      print('\nPlease select the number for an iteration to add the story to or Back to go to main menu.\n')
+      print('\nPlease select an Iteration to add the story to or Back to go to main menu.\n')
       i=1
       for itr in iterations:
         print(str(i)+": "+itr.name)
@@ -113,9 +114,7 @@ while 1:
       
       selected_itr = input("Selection: ")
 
-#add back option
-      #if selected_itr.lower() == "back":
-       # continue
+      #add back option
       
       while selected_itr.lower() != "back":
         try:
@@ -131,10 +130,6 @@ while 1:
       print('\nYou selected:', selected_itr,'\n')
 
 
-
-      #while selected_itr not in [itr.name for itr in iterations]:
-      #  print('\nError: Invalid Selection...\n')
-      #  selected_itr = input("Selection: ")
       selected_iteration = get_obj_by_name(selected_itr, iterations)
       name=input("Enter User Story Name: ")
       while name in [item.name for item in selected_iteration.userStories]:
@@ -143,6 +138,9 @@ while 1:
       while True:
         try:
           size=int(input("Enter User Story Size: "))
+          if size<0:
+              print("Sorry, input must be a positive integer. Try again.")
+              continue
           break
         except:
           print("Invalid Size. Please choose an integer value.")
@@ -155,7 +153,7 @@ while 1:
       print('\nAn Iteration needs to be created before creating additional tasks\n')
     else:
       temp = {}
-      print('\nPlease select an iteration to add the task to:\n')
+      print('\nPlease select an Iteration to add the task to or Back to go to main menu:\n')
       i=1
       n=[]
       for itr in iterations:
@@ -185,7 +183,7 @@ while 1:
       if(not get_obj_by_name(selected_itr, iterations).userStories):
         print('\nNew tasks cant be added to iterations with no user stories...\n')
       else:
-        print('\nPlease select a user story to add the task to:\n')
+        print('\nPlease select a User Story to add the task to or Back to go to main menu:\n')
         i=1
         k=[]
         for item in temp[selected_itr].keys():
@@ -207,10 +205,7 @@ while 1:
         if selected_story.lower() == "back":
           continue
 
-       # while selected_story not in temp[selected_itr].keys():
-       #   print('\nError: Invalid Selection...\n')
-       #   selected_story = input("Selection: ")
-       
+
         selected_itr = get_obj_by_name(selected_itr, iterations)
         selected_story = get_obj_by_name(selected_story, selected_itr.userStories)
 
@@ -218,18 +213,41 @@ while 1:
         while name in [item.name for item in selected_story.tasks]:
           print('\nError: Task Already Exists...\n')
           name = input("Selection: ")
-        effort = int(input("Enter Task Effort: "))
+
+        while True:
+          try:
+            effort = int(input("Enter Task Effort: "))
+            if effort<0:
+              print("Sorry, input must be a positive integer. Try again.")
+              continue
+            break
+          except:
+            print ("Invalid Effort. Please choose an integer value. ")
+            
         print('\nPlease select a developer: \n')
+        i=1
         for dev in selected_itr.developers:
-          print(dev.name)
+          print(str(i)+": "+dev.name)
+          i+=1
         print('\n')
         selected_dev = input('Selection: ')
-        while selected_dev not in [item.name for item in selected_itr.developers]:
-          print('\nError: Invalid Developer Name...\n')
-          selected_dev = input('Selection: ')
+
+        while True:
+          try:
+            if int(selected_dev)>0:
+              selected_dev= selected_itr.developers[int(selected_dev)-1].name
+              break
+            else:
+              selected_dev = input("Invalid Selection.. Try again: ")
+          except:
+            selected_dev = input("Invalid Selection.. Try again: ")
+
         while True:
           try:
             start= datetime.datetime.strptime(input('Start Date (DD/MM/YYYY): '), "%d/%m/%Y").date()
+            if start < selected_itr.start:
+              print("Sorry, task start date must be after the iteration start date. Try again: ")
+              continue
             break
           except:
             print("Invalid Date")
@@ -238,18 +256,19 @@ while 1:
 
   #delete user story
   elif(curr_opp == '4'):
-    print('Please Select An Iteration\n')
-    #temp = []
+    print('Please Select an Iteration to delete a user story from or Back to go to main menu:\n')
+
+    if iterations == []:
+      print('\nCaution: No iterations are available.\n')
+      continue
+    
     i=1
     for itr in iterations:
       print(str(i)+": "+itr.name)
       i+=1
-      #temp.append(itr.name)
     print('\n')
     selected_itr = input('Selection: ')
 
-    #if selected_itr.lower()=="back":
-    #  continue
 
     while selected_itr.lower() != "back":
       try:
@@ -263,15 +282,10 @@ while 1:
 
     if selected_itr.lower() == "back":
         continue
-      
-   
-    #while selected_itr not in temp:
-    #  print('\nError: Invalid Selection...\n')
-    #  selected_itr = input('Selection: ')
 
     selected_iteration = get_obj_by_name(selected_itr, iterations)
     
-    print('\nPlease Select The User Story That You Would Like To Delete:\n')
+    print('\nPlease select the User Story that you would like to delete or Back to go to main menu:\n')
     temp = []
     if not selected_iteration.userStories:
       print('\nThere are no user stories to be selected!\n')
@@ -281,11 +295,9 @@ while 1:
         print(str(i)+": "+us.name)
         i+=1
         temp.append(us.name)
+      print('\n')
       selected_story = input('Selection: ')
 
-      #if selected_story.lower() == "back":
-      #  continue
-      
       while selected_story.lower() != "back":
         try:
           if int(selected_story)>0:
@@ -299,22 +311,22 @@ while 1:
         continue
 
 
-      #while(selected_story not in temp):
-        #print('\nError: Invalid Selection...\n')
-        #selected_story = input('Selection: ')
-
       selected_iteration.delete_userStory(selected_story)
-      selected_story = get_obj_by_name(selected_story, selected_iteration.userStories)  #delete this line
+      selected_story = get_obj_by_name(selected_story, selected_iteration.userStories)
       print('\nUser Story Has Been Deleted Successfully!\n')
 
+  #delete task
   elif(curr_opp == '5'):
-    print('\nPlease Select An Iteration\n')
-    #temp = []
+    print('\nPlease select an Iteration that you want to delete the task from or Back to go to main menu:\n')
+
+    if iterations == []:
+      print('\nCaution: No iterations are available.\n')
+      continue
+    
     i=1
     for itr in iterations:
       print(str(i)+": "+itr.name)
       i+=1
-      #temp.append(itr.name)
     print('\n')
     selected_itr = input('Selection: ')
     
@@ -333,7 +345,7 @@ while 1:
 
     selected_iteration = get_obj_by_name(selected_itr, iterations)
     
-    print('\nPlease Select The User Story That Contains The Task That You Would Like to Delete:\n')
+    print('\nPlease select the User Story that contains the task you want to delete or Back to go to main menu:\n')
     temp = []
     if not selected_iteration.userStories:
       print('\nThere are no user stories to be selected!\n')
@@ -359,7 +371,7 @@ while 1:
         continue
       
       selected_story = get_obj_by_name(selected_story, selected_iteration.userStories)
-      print('\nPlease Select the Task that You Would Like to Delete:\n')
+      print('\nPlease select the Task that you want to delete or Back to go to main menu:\n')
       temp = []
       if not selected_story.tasks:
         print('\nThere are no tasks to be deleted!\n')
@@ -389,9 +401,9 @@ while 1:
         selected_story.delete_task(selected_task)
         print('\nTask Has Been Delete Successfully!\n')
 
-##############
+  #delete iteration
   elif(curr_opp == '6'):
-    print('\nPlease select an iteration to delete:\n')
+    print('\nPlease select an Iteration to delete or Back to go to main menu:\n')
     if iterations == []:
       print('\nCaution: No iterations are available.\n')
       continue
@@ -405,7 +417,7 @@ while 1:
     while selected_itr.lower()!="back":
       try:
         if int(selected_itr)>0:
-          selected_itr = iterations[int(selected_itr)-1]
+          selected_itr = iterations[int(selected_itr)-1].name
           break
         else:
           selected_itr = input("Invalid Selection.. Try again: ")
@@ -413,19 +425,21 @@ while 1:
         selected_itr = input("Invalid Selection.. Try again: ")
     if selected_itr.lower() == "back":
       continue 
+    selected_itr= get_obj_by_name(selected_itr, iterations)
+    
     iterations.remove(selected_itr)
     print('\nIteration has been deleted.\n')
-##############
 
+  #Status update
   elif(curr_opp == '7'):
     temp = []
     for itr in iterations:
       if session_user in itr.developers:
         temp.append(itr)
     if not temp:
-      print('\You are not a part of any iteration so you cant edit a task...\n')
+      print('\You are not a part of any iteration so you can not edit a task...\n')
     else:
-      print('\nPlease Select the Iteration that contains the task:\n')
+      print('\nPlease select the Iteration that contains the task or Back to go to main menu:\n')
       i=1
       for item in temp:
         print(str(i)+": "+item.name)
@@ -450,7 +464,7 @@ while 1:
       selected_itr = get_obj_by_name(selected_itr, temp)
       temp = []
 
-      print('\nPlease Select the User Story that contains the task:\n')
+      print('\nPlease select the User Story that contains the task or Back to go to main menu:\n')
       i=1
       for item in  selected_itr.userStories:
         temp.append(item.name)
@@ -487,7 +501,7 @@ while 1:
         if not valid:
           print('\nYou are not assigned to any tasks in this story...\n')
         else:
-          print('\nPlease Select the task that you would like to update:\n')
+          print('\nPlease select the Task that you would like to update or Back to go to main menu:\n')
           i=1
           for item in temp:
             print(str(i)+': '+item)
@@ -509,13 +523,18 @@ while 1:
             continue
 
             
-          print('Please select the new status that you would like to assign:')
+          print('\nPlease select the new Status that you would like to assign or Back to go to main menu:\n')
           print('1- In Progress')
           print('2- Completed\n')
           selection = input('Selection: ')
-          while selection not in ['1', '2']:
+
+          while selection not in ['1', '2','back','Back']:
             print('\nError: Invalid Selection...\n')
             selection = input('Selection: ')
+            
+          if selection.lower() == "back":
+            continue
+          
           task = get_obj_by_name(selected_task, selected_story.tasks)
           if(selection == '1'):
             task.update_status('In Progress')
@@ -523,8 +542,14 @@ while 1:
             task.update_status('Completed')
           print('\nTask Update Successfully!\n')
 
+  #generate report
   elif(curr_opp == '8'):
-    print('\nPlease Select an Iteration:\n')
+    print('\nPlease select an Iteration to view its report or Back to go to main menu:\n')
+
+    if iterations == []:
+      print('\nCaution: No iterations are available.\n')
+      continue
+    
     i=1
     temp=[]
     for itr in iterations:

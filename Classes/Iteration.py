@@ -74,13 +74,13 @@ class Iteration:
             # Print Tasks
             print('\n\tTasks Open')
             for task in openTask:
-                print('\t'+task.name+'\t-\t'+task.developer.name)
+                print('\t'+task.name+'\t\t-\t'+task.developer.name)
             print('\n\tTasks in progress')
             for task in progressTask:
-                print('\t'+task.name+'\t-\t'+task.developer.name)
+                print('\t'+task.name+'\t\t-\t'+task.developer.name)
             print('\n\tTasks completed')
             for task in completedTask:
-                print('\t'+task.name+'\t-\t'+task.developer.name)
+                print('\t'+task.name+'\t\t-\t'+task.developer.name)
         print('\n')
         print('User Story Completed:')
         for item in completed:
