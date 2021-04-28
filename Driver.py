@@ -16,6 +16,9 @@ password=res['password']
 session_user = None
 curr_opp=''
 
+print('Greetings, and welcome to your journey towards success...')
+print('My name is Trella, and I will be your digital Agile assistant!')
+
 while not role:
   print('\nPlease Select a Role:\n1- Scrum Master\n2- Developer\n')
   role_key = input('Selection: ')
@@ -168,7 +171,9 @@ while 1:
         i+=1
         temp[itr.name] = {}
         n.append(itr.name)
-        temp[itr.name] = itr.print_userStories()
+        for story in itr.userStories: 
+          print('\t- '+story.name) 
+          temp[itr.name][story.name]=story 
         print('\n')
       selected_itr = input("Selection: ")
 
@@ -404,7 +409,7 @@ while 1:
 
         
         selected_story.delete_task(selected_task)
-        print('\nTask Has Been Delete Successfully!\n')
+        print('\nTask Has Been Deleted Successfully!\n')
 
   #delete iteration
   elif(curr_opp == '6'):

@@ -14,6 +14,8 @@ class Task:
         self.status = newStatus
         if(newStatus == 'Completed'):
             self.end = date.today()
+        elif(newStatus == 'In Progress'):
+            self.end = None
     
     def print_details(self):
         print('\n'
