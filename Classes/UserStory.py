@@ -9,6 +9,26 @@ class UserStory:
     def print_itr(self):
         print("Name : " + self.name)
 
+    def print_details(self):
+        self.update_effort()
+        self.update_status()
+        print('\n'
+              'User Story name:\t%s\n'
+              'Number of Tasks:\t%s\n'
+              'User Story effort:\t%s\n'
+              'Completion status:\t%s\n'
+              'User Story size:\t%s\n'
+              % (self.name,
+              len(self.tasks),
+              self.effort,
+              self.status,
+              self.size))
+
+    def print_tasks(self):
+        print('\nRegistered Tasks are:\n')
+        for index, task in enumerate(self.tasks):
+            print('\t' + str(index+1) + '- ' + task.name)
+
     def update_effort(self):
         res = 0
         for task in self.tasks:

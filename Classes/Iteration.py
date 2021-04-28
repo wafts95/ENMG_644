@@ -20,6 +20,26 @@ class Iteration:
     def add_story(self, story):
         self.userStories.append(story)
 
+    def print_details(self):
+        print('\n'
+              'Iteration name:\t\t\t%s\n'
+              'Iteration duration:\t\t%s\n'
+              'Iteration start:\t\t%s\n'
+              'Active Developers in Iteration:\t%s\n'
+              'Number of User Stories:\t\t%s\n'
+              % (self.name,
+              self.duration,
+              self.start,
+              len(self.developers),
+              len(self.userStories)))
+
+    def print_userStories(self):
+        userStories_dict = {}
+        print('\nRegistered User Stories are:\n')
+        for index, story in enumerate(self.userStories):
+          print('\t' + str(index+1) + '- ' + story.name)
+          userStories_dict[story.name]=story
+        return userStories_dict
 
     def print_report(self):
         # US classification

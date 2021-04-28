@@ -56,10 +56,11 @@ while 1:
   else:
     print('7- Update Task Status')
   print('8- Generate Iteration Report')
+  print('9- View Project')
   print('\n')
   curr_opp=input("Enter option: ")
 
-  if(not (curr_opp in ['0','8'] or (role == 'Scrum Master' and curr_opp in ['1', '2','3','4', '5', '6']) or (role == 'Developer' and curr_opp in ['7']))):
+  if(not (curr_opp in ['0','8','9'] or (role == 'Scrum Master' and curr_opp in ['1', '2','3','4', '5', '6']) or (role == 'Developer' and curr_opp in ['7']))):
     print("\nError: Invalid Operation, Please Try Again!\n")
     
 
@@ -70,6 +71,11 @@ while 1:
   # Create a new Iteration
   elif(curr_opp == '1'):
     name=input("Enter Iteration Name: ")
+
+    while name in [item.name for item in iterations]:
+      print('\nError: Iteration name taken, please choose another name...\n')
+      name=input("Enter Iteration Name: ")
+
     while True:
       try:
         duration=int(input("Enter Iteration Duration (in days): "))
@@ -162,9 +168,7 @@ while 1:
         i+=1
         temp[itr.name] = {}
         n.append(itr.name)
-        for story in itr.userStories:
-          print('\t'+story.name)
-          temp[itr.name][story.name]=story
+        temp[itr.name] = itr.print_userStories()
         print('\n')
       selected_itr = input("Selection: ")
 
@@ -576,5 +580,79 @@ while 1:
 
     selected_itr = get_obj_by_name(selected_itr, iterations)
     selected_itr.print_report()
+  
+  elif curr_opp == '9':
+    if iterations == []:
+      print('\nCaution: No iterations are available to view.\n')
+      continue
+    
+    print('\nThe following are the available Iterations:\n')
+
+    temp = []
+    for i, itr in enumerate(iterations):
+      print(str(i+1)+": "+itr.name)
+      temp.append(itr.name)
+
+    print('\nPlease select an Iteration to view its details, and its User Stories\n or Back to go to main menu:\n')
+
+    itr_ui = input('Selection: ')
+
+    while itr_ui.lower() != "back":
+      try:
+        if 1 <= int(itr_ui) <= len(temp):
+          selected_itr = iterations[int(itr_ui)-1]
+          break
+        else:
+          itr_ui = input("Invalid Selection.. Try again: ")
+      except:
+        itr_ui = input("Invalid Selection.. Try again: ")
+
+    if itr_ui.lower() == "back":
+        continue
+
+    selected_itr.print_details()
+    selected_itr.print_userStories()
+
+    print('\nPlease select a User Story to view its details, and its Tasks\n or Back to go to main menu:\n')
+
+    us_ui = input('Selection: ')
+
+    while us_ui.lower() != "back":
+      try:
+        if 1 <= int(us_ui) <= len(selected_itr.userStories):
+          selected_us = selected_itr.userStories[int(us_ui)-1]
+          break
+        else:
+          us_ui = input("Invalid Selection.. Try again: ")
+      except:
+        us_ui = input("Invalid Selection.. Try again: ")
+
+    if us_ui.lower() == "back":
+        continue
+
+    # print('selected_us', selected_us.name)
+    selected_us.print_details()
+    selected_us.print_tasks()
+
+    print('\nPlease select a Task to view its details\n or Back to go to main menu:\n')
+
+    task_ui = input('Selection: ')
+
+    while task_ui.lower() != "back":
+      try:
+        if 1 <= int(task_ui) <= len(selected_us.tasks):
+          selected_task = selected_us.tasks[int(task_ui)-1]
+          break
+        else:
+          task_ui = input("Invalid Selection.. Try again: ")
+      except:
+        task_ui = input("Invalid Selection.. Try again: ")
+
+    if task_ui.lower() == "back":
+        continue
+    
+    # print('selected task: %s\n' % selected_task.name)
+    selected_task.print_details()
+
     
 save(users, iterations)
