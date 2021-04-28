@@ -217,7 +217,7 @@ while 1:
         name = input("Enter Task Name: ")
         while name in [item.name for item in selected_story.tasks]:
           print('\nError: Task Already Exists...\n')
-          name = input("Selection: ")
+          name = input("Enter Task Name: ")
 
         while True:
           try:
@@ -442,7 +442,7 @@ while 1:
       if session_user in itr.developers:
         temp.append(itr)
     if not temp:
-      print('\You are not a part of any iteration so you can not edit a task...\n')
+      print('\nYou are not a part of any iteration so you can not edit a task...\n')
     else:
       print('\nPlease select the Iteration that contains the task or Back to go to main menu:\n')
       i=1
