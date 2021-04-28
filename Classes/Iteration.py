@@ -51,17 +51,18 @@ class Iteration:
         print('Start Date:\t'+self.start.strftime('%d/%m/%Y'))
         print('Velocity:\t'+str(velocity))
         print('\n')
-        print('User Story Backlog:')
+        print('User Story Backlog:\n')
         for item in backlog:
-            print(item.name)
+            print('- '+item.name)
             for task in item.tasks:
-                print('\t'+task.name+'\t\t-\t'+task.developer.name)
+                print('\t- '+task.name+'\t\t- '+task.developer.name)
+            print('\n')
         print('\n')
 
 
-        print('User Story In progress:')
+        print('User Story In progress:\n')
         for item in progress:
-            print(item.name)
+            print('- '+item.name)
             # Classify Tasks
             for task in item.tasks:
                 if task.status == 'Completed':
@@ -72,21 +73,22 @@ class Iteration:
                     openTask.append(task)
 
             # Print Tasks
-            print('\n\tTasks Open')
+            print('\n\tTasks Open\n')
             for task in openTask:
-                print('\t'+task.name+'\t\t-\t'+task.developer.name)
-            print('\n\tTasks in progress')
+                print('\t\t- '+task.name+'\t\t- '+task.developer.name)
+            print('\n\tTasks in progress\n')
             for task in progressTask:
-                print('\t'+task.name+'\t\t-\t'+task.developer.name)
-            print('\n\tTasks completed')
+                print('\t\t- '+task.name+'\t\t- '+task.developer.name)
+            print('\n\tTasks completed\n')
             for task in completedTask:
-                print('\t'+task.name+'\t\t-\t'+task.developer.name)
+                print('\t\t- '+task.name+'\t\t- '+task.developer.name)
         print('\n')
-        print('User Story Completed:')
+        print('User Story Completed:\n')
         for item in completed:
-            print(item.name)
+            print('- '+item.name)
             for task in item.tasks:
-                print('\t'+task.name+'\t\t-\t'+task.developer.name)
+                print('\t- '+task.name+'\t\t- '+task.developer.name)
+            print('\n')
         print('\n')
         max_effort = 0
         for story in self.userStories:

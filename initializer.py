@@ -8,6 +8,12 @@ import pandas as pd
 
 def init():
   print('\nInitializing application...\n')
+  #Load Password
+  df = pd.read_excel('./Database/ScrumPass.xlsx', dtype=str)
+  df = df.fillna('')
+  row = df.iloc[0]
+  ScrumPassword = row['Password']
+  
   # Load Developers
   users = []
   df = pd.read_excel('./Database/user.xlsx', dtype=str)
@@ -52,7 +58,7 @@ def init():
     tasks.append(Task(row['name'], row['effort'], temp_developer,   datetime.datetime.strptime(row['start'], "%d/%m/%Y").date(), row['status'], end))
     temp_story.add_task(tasks[-1])
   print('\nApplication Loaded Successfully!\n')
-  return {'users' : users, 'iterations' : itrs}
+  return {'users' : users, 'iterations' : itrs, 'password' : ScrumPassword}
 
 def save(users, iterations):
   print('\nSaving Data...\n')

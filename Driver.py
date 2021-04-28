@@ -12,6 +12,7 @@ role = None
 res = init()
 users = res['users']
 iterations = res['iterations']
+password=res['password']
 session_user = None
 curr_opp=''
 
@@ -21,7 +22,7 @@ while not role:
   if role_key in ['1','2']:
     if role_key == '1':
       passcode_trial = input('Please enter the Scrum Master password: \n')
-      if passcode_trial != "enmg644":
+      if passcode_trial != password:
         print("Invalid Password. Try again...")   
         continue
       role = 'Scrum Master'
