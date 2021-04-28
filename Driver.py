@@ -5,6 +5,7 @@ from Classes.Developer import Developer
 from initializer import init, save
 from utils import get_obj_by_name
 import datetime
+import getpass
 
 users = []
 iterations = []
@@ -24,7 +25,7 @@ while not role:
   role_key = input('Selection: ')
   if role_key in ['1','2']:
     if role_key == '1':
-      passcode_trial = input('Please enter the Scrum Master password: \n')
+      passcode_trial = getpass.getpass('Please enter the Scrum Master password: \n')
       if passcode_trial != password:
         print("Invalid Password. Try again...")   
         continue
