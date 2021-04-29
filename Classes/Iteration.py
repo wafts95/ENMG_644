@@ -102,6 +102,11 @@ class Iteration:
             print('\n\tTasks completed\n')
             for task in completedTask:
                 print('\t\t- '+task.name+'\t\t- '+task.developer.name)
+
+            openTask = []
+            progressTask = []
+            completedTask = []
+            
         print('\n')
         print('User Story Completed:\n')
         for item in completed:
